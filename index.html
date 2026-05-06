@@ -2,23 +2,50 @@
 <html>
 <head>
   <title>Hall Ticket Generator</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+    }
+
+    .ticket {
+      width: 600px;
+      margin: auto;
+      border: 2px solid black;
+      padding: 20px;
+      text-align: left;
+    }
+
+    .header {
+      text-align: center;
+      font-weight: bold;
+    }
+
+    img {
+      width: 100px;
+      height: 120px;
+      float: right;
+      border: 1px solid black;
+    }
+  </style>
 </head>
+
 <body>
 
-<h2>Generate Hall Ticket</h2>
+<h2>Hall Ticket Generator</h2>
 
-<form id="form">
-  Name: <input type="text" id="name"><br><br>
-  Reg No: <input type="text" id="reg"><br><br>
-  Exam: <input type="text" id="exam"><br><br>
-  Date: <input type="date" id="date"><br><br>
+<input type="text" id="name" placeholder="Name"><br><br>
+<input type="text" id="reg" placeholder="Register Number"><br><br>
+<input type="text" id="exam" placeholder="Exam Name"><br><br>
+<input type="date" id="date"><br><br>
+<input type="file" id="photo"><br><br>
 
-  <button type="button" onclick="generate()">Generate</button>
-</form>
+<button onclick="generate()">Generate</button>
 
 <hr>
 
-<div id="ticket"></div>
+<div id="output"></div>
 
 <script>
 function generate() {
@@ -26,15 +53,43 @@ function generate() {
   let reg = document.getElementById("reg").value;
   let exam = document.getElementById("exam").value;
   let date = document.getElementById("date").value;
+  let photo = document.getElementById("photo").files[0];
 
-  document.getElementById("ticket").innerHTML = `
-    <h3>Hall Ticket</h3>
-    <p>Name: ${name}</p>
-    <p>Reg No: ${reg}</p>
-    <p>Exam: ${exam}</p>
-    <p>Date: ${date}</p>
-    <button onclick="window.print()">Print</button>
-  `;
+  let reader = new FileReader();
+
+  reader.onload = function(e) {
+    document.getElementById("output").innerHTML = `
+      <div class="ticket" id="ticket">
+        <div class="header">
+          <h2>ABC COLLEGE OF ENGINEERING</h2>
+          <p>Hall Ticket</p>
+        </div>
+
+        <img src="${e.target.result}">
+
+        <p><b>Name:</b> ${name}</p>
+        <p><b>Register No:</b> ${reg}</p>
+        <p><b>Exam:</b> ${exam}</p>
+        <p><b>Date:</b> ${date}</p>
+
+        <br><br>
+        <p>Signature of Candidate __________</p>
+        <p>Controller of Examination __________</p>
+      </div>
+
+      <br>
+      <button onclick="downloadPDF()">Download PDF</button>
+    `;
+  }
+
+  if (photo) {
+    reader.readAsDataURL(photo);
+  }
+}
+
+function downloadPDF() {
+  let element = document.getElementById("ticket");
+  html2pdf().from(element).save("Hall_Ticket.pdf");
 }
 </script>
 
