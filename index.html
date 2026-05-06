@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hall Ticket Generator</title>
+</head>
+<body>
+
+<h2>Generate Hall Ticket</h2>
+
+<form id="form">
+  Name: <input type="text" id="name"><br><br>
+  Reg No: <input type="text" id="reg"><br><br>
+  Exam: <input type="text" id="exam"><br><br>
+  Date: <input type="date" id="date"><br><br>
+
+  <button type="button" onclick="generate()">Generate</button>
+</form>
+
+<hr>
+
+<div id="ticket"></div>
+
+<script>
+function generate() {
+  let name = document.getElementById("name").value;
+  let reg = document.getElementById("reg").value;
+  let exam = document.getElementById("exam").value;
+  let date = document.getElementById("date").value;
+
+  document.getElementById("ticket").innerHTML = `
+    <h3>Hall Ticket</h3>
+    <p>Name: ${name}</p>
+    <p>Reg No: ${reg}</p>
+    <p>Exam: ${exam}</p>
+    <p>Date: ${date}</p>
+    <button onclick="window.print()">Print</button>
+  `;
+}
+</script>
+
+</body>
+</html>
